@@ -1,0 +1,54 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Soil_Monitoring_Web_App.Models
+
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class=" ms-3 dropdown">
+        <button title="Tài khoản" class=" h-100 w-100  dropdown-toggle p-0 overflow-hidden" type="button" id="dropdownAvatar" data-bs-toggle="dropdown" aria-expanded="false">
+            @{
+                // Get ID and user
+                var userId = UserManager.GetUserId(User);
+                var user = await UserManager.FindByIdAsync(userId);
+
+                if (user != null && !string.IsNullOrEmpty(user.Avatar))
+                {
+                    <img class="h-100 w-100 object-fit-cover" src="@user.Avatar" alt="User Avatar" />
+                }
+                else
+                {
+                    <span class="fa fa-user text-body"></span>
+                }
+                bool isAdmin = false;
+                if(user != null)
+                {
+                    var roles = await UserManager.GetRolesAsync(user);
+                    isAdmin = roles.Any(q => q == "Administrator");
+                }
+                
+            }
+        </button>
+        <ul class="dropdown-menu dropdown-menu-start dropdown-menu-lg-end" aria-labelledby="dropdownAvatar">
+            <li class="dropdown-item active-text-light"><a asp-area="Identity" asp-page="/Account/Manage/Index" class="text-dark fw-medium active-text-light">Profile</a></li>
+            @if(isAdmin) {
+                <li class="dropdown-item active-text-light"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="text-dark fw-medium active-text-light">Admin</a></li>
+            }
+            <li class="dropdown-item active-text-light">
+                <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <input id="logout" type="submit" class="text-danger border-0 w-100 bg-transparent text-start p-0 text-danger fw-medium" title="Log out" value="Log out" />
+                </form>
+            </li>
+
+        </ul>
+    </div>
+}
+else
+{
+    <a class="me-5" asp-area="Identity" asp-page="/Account/Login">
+        <span class="fa fa-user text-body me-1"></span>
+        <span>Sign in</span>
+    </a>
+}
