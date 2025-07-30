@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Soil_Monitoring_Web_App</title>
-
+    <link rel="icon" type="image/x-icon" href="~/favicon.png" />
     <!-- Reset CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css" integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Boostrap StyleSheet -->
@@ -22,7 +22,11 @@
     <link rel="stylesheet" href="~/css/main.css" asp-append-version="true" />
 </head>
 <body>
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-dark" role="status"></div>
+    </div>
     <header>
+        
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-transparent box-shadow mt-2 mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand ms-4" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/leaf-logo-png.jpg" alt="Leaf Image"/></a>
@@ -32,16 +36,16 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1 justify-content-center">
-                        <li class="nav-item ms-2  me-2">
-                            <a class="nav-link active" asp-area="" asp-controller="Home" asp-action="Index"><i class=" fa-solid fa-house"></i> <span>Home</span></a>
+                        <li class="nav-item ms-3  me-3">
+                            <a class="nav-link @((ViewData["Navbar"] as string == "Home") ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Index"><i class=" fa-solid fa-house"></i> <span>Home</span></a>
                         </li>
-                        <li class="nav-item ms-2 me-2">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy"><i class="fa-solid fa-chart-simple"></i> <span>Statistics</span></a>
+                        <li class="nav-item ms-3 me-3">
+                            <a class="nav-link @((ViewData["Navbar"] as string == "Statistic") ? "active" : "")" asp-area="" asp-controller="Statistic" asp-action="Index"><i class="fa-solid fa-chart-simple"></i> <span>Statistics</span></a>
                         </li>
-                        <li class="nav-item ms-2 me-2 ">
+                        <li class="nav-item ms-3 me-3 ">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy"><i class="fa-solid fa-file"></i><span>Task</span></a>
                         </li>
-                        <li class="nav-item ms-2  me-2 ">
+                        <li class="nav-item ms-3  me-3 ">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy"><i class="fa-solid fa-bell"></i><span>Notification</span></a>
                         </li>
                     </ul>
@@ -52,6 +56,7 @@
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -60,8 +65,10 @@
 
     
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/wow//wow.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/main.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -27,15 +27,22 @@ namespace Soil_Monitoring_Web_App.Models
         public double EC { get; set; }
 
         [Column(TypeName = "DECIMAL(5,2)")]
+        public double Moisture { get; set; }
+
+        [Column(TypeName = "DECIMAL(5,2)")]
         public double Temp { get; set; }
+
+        [Column(TypeName = "date")]
+        public DateTime Date { get; set; }
+
+        [Column(TypeName = "time")]
+        public TimeSpan Time { get; set; }
 
         [ForeignKey(nameof(Sensor))]
         public int SensorId { get; set; }   
         public Sensor? Sensor { get; set; }
 
-        [ForeignKey(nameof(MeasurementDate))]
-        public int MeasurementDateId { get; set;}
-        public MeasurementDate? MeasurementDate { get; set; }
+        
 
         
 

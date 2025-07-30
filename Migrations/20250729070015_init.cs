@@ -9,29 +9,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Soil_Monitoring_Web_App.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration1 : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Location",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Lattitude = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Longtitude = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Location", x => x.Id);
-                })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
@@ -50,6 +33,24 @@ namespace Soil_Monitoring_Web_App.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Sensors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<int>(type: "int", nullable: false),
+                    Longtitude = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Latitude = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sensors", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -92,27 +93,6 @@ namespace Soil_Monitoring_Web_App.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Sensors",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<int>(type: "int", nullable: false),
-                    LocationId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Sensors", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Sensors_Location_LocationId",
-                        column: x => x.LocationId,
-                        principalTable: "Location",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "RoleClaims",
                 columns: table => new
                 {
@@ -132,6 +112,36 @@ namespace Soil_Monitoring_Web_App.Migrations
                         name: "FK_RoleClaims_Roles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "SoilData",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    N = table.Column<float>(type: "FLOAT", nullable: false),
+                    P = table.Column<float>(type: "FLOAT", nullable: false),
+                    K = table.Column<float>(type: "FLOAT", nullable: false),
+                    Humidity = table.Column<decimal>(type: "DECIMAL(5,2)", nullable: false),
+                    PH = table.Column<decimal>(type: "decimal(10,4)", nullable: false),
+                    EC = table.Column<decimal>(type: "DECIMAL(6,3)", nullable: false),
+                    Moisture = table.Column<decimal>(type: "DECIMAL(5,2)", nullable: false),
+                    Temp = table.Column<decimal>(type: "DECIMAL(5,2)", nullable: false),
+                    Date = table.Column<DateTime>(type: "date", nullable: false),
+                    Time = table.Column<TimeSpan>(type: "time", nullable: false),
+                    SensorId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SoilData", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SoilData_Sensors_SensorId",
+                        column: x => x.SensorId,
+                        principalTable: "Sensors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -239,75 +249,14 @@ namespace Soil_Monitoring_Web_App.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.CreateTable(
-                name: "MeasurementDate",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Date = table.Column<DateOnly>(type: "date", nullable: false),
-                    Time = table.Column<TimeOnly>(type: "time(6)", nullable: false),
-                    SensorId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MeasurementDate", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_MeasurementDate_Sensors_SensorId",
-                        column: x => x.SensorId,
-                        principalTable: "Sensors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "SoilData",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    N = table.Column<float>(type: "FLOAT", nullable: false),
-                    P = table.Column<float>(type: "FLOAT", nullable: false),
-                    K = table.Column<float>(type: "FLOAT", nullable: false),
-                    Humidity = table.Column<decimal>(type: "DECIMAL(5,2)", nullable: false),
-                    PH = table.Column<decimal>(type: "decimal(10,4)", nullable: false),
-                    EC = table.Column<decimal>(type: "DECIMAL(6,3)", nullable: false),
-                    Temp = table.Column<decimal>(type: "DECIMAL(5,2)", nullable: false),
-                    SensorId = table.Column<int>(type: "int", nullable: false),
-                    MeasurementDateId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SoilData", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SoilData_MeasurementDate_MeasurementDateId",
-                        column: x => x.MeasurementDateId,
-                        principalTable: "MeasurementDate",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_SoilData_Sensors_SensorId",
-                        column: x => x.SensorId,
-                        principalTable: "Sensors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "530808a7-3717-4bc5-913a-2016a641df6d", null, "Administrator", "ADMINISTRATOR" },
-                    { "9612722d-ab27-4123-8593-214cfba00807", null, "User", "USER" }
+                    { "6617ca4b-ee91-4b7d-abc3-6ba672668639", null, "Administrator", "ADMINISTRATOR" },
+                    { "9c90edde-960e-4cdc-8bec-a2341f8295a4", null, "User", "USER" }
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MeasurementDate_SensorId",
-                table: "MeasurementDate",
-                column: "SensorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoleClaims_RoleId",
@@ -319,16 +268,6 @@ namespace Soil_Monitoring_Web_App.Migrations
                 table: "Roles",
                 column: "NormalizedName",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Sensors_LocationId",
-                table: "Sensors",
-                column: "LocationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SoilData_MeasurementDateId",
-                table: "SoilData",
-                column: "MeasurementDateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SoilData_SensorId",
@@ -384,19 +323,13 @@ namespace Soil_Monitoring_Web_App.Migrations
                 name: "UserTokens");
 
             migrationBuilder.DropTable(
-                name: "MeasurementDate");
+                name: "Sensors");
 
             migrationBuilder.DropTable(
                 name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Sensors");
-
-            migrationBuilder.DropTable(
-                name: "Location");
         }
     }
 }

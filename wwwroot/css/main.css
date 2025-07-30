@@ -9,6 +9,19 @@
   background-position-y: bottom;
 }
 
+#spinner {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease, visibility 0s;
+  z-index: 99999;
+}
+
+#spinner.hide {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+}
+
 .nav-link {
   display: flex;
   padding: 10px;
@@ -49,4 +62,42 @@
 }
 .nav-link.active i, .nav-link.active span {
   color: #fff;
+}
+
+.soil-container {
+  position: relative;
+  display: flex;
+  flex: 1;
+}
+.soil-container .soil-image {
+  height: 400px;
+  width: 400px;
+}
+
+.crudDb-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 35%;
+  left: -20px;
+}
+
+.updatedb-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+  width: 60px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+.updatedb-btn button {
+  font-size: 20px;
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  z-index: 1;
+}
+.updatedb-btn:hover {
+  opacity: 0.8;
 }

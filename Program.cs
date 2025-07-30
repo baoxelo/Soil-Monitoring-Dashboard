@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using ShoesShop.Configuration;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Soil_Monitoring_Web_App.Services;
+using Soil_Monitoring_Web_App.IExtensionServices;
+using Soil_Monitoring_Web_App.ExtensionServices;
 
 namespace Soil_Monitoring_Web_App
 {
@@ -22,6 +24,7 @@ namespace Soil_Monitoring_Web_App
             builder.Services.ConfigureIdentity();
             builder.Services.AddAuthorization();
             builder.Services.AddTransient<IEmailSender, SendMailService>();
+            builder.Services.AddScoped<ICsvToSqlService, CsvToSqlService>();
 
             builder.Services.ConfigureApplicationCookie(options =>
             {

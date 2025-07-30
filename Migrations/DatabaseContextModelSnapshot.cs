@@ -50,13 +50,13 @@ namespace Soil_Monitoring_Web_App.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9612722d-ab27-4123-8593-214cfba00807",
+                            Id = "9c90edde-960e-4cdc-8bec-a2341f8295a4",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "530808a7-3717-4bc5-913a-2016a641df6d",
+                            Id = "6617ca4b-ee91-4b7d-abc3-6ba672668639",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -243,49 +243,6 @@ namespace Soil_Monitoring_Web_App.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("Soil_Monitoring_Web_App.Models.Location", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Lattitude")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Longtitude")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Location");
-                });
-
-            modelBuilder.Entity("Soil_Monitoring_Web_App.Models.MeasurementDate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date");
-
-                    b.Property<int>("SensorId")
-                        .HasColumnType("int");
-
-                    b.Property<TimeOnly>("Time")
-                        .HasColumnType("time(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SensorId");
-
-                    b.ToTable("MeasurementDate");
-                });
-
             modelBuilder.Entity("Soil_Monitoring_Web_App.Models.Sensor", b =>
                 {
                     b.Property<int>("Id")
@@ -294,15 +251,16 @@ namespace Soil_Monitoring_Web_App.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
+                    b.Property<string>("Latitude")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Longtitude")
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Name")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LocationId");
 
                     b.ToTable("Sensors");
                 });
@@ -315,6 +273,9 @@ namespace Soil_Monitoring_Web_App.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("date");
+
                     b.Property<decimal>("EC")
                         .HasColumnType("DECIMAL(6,3)");
 
@@ -324,8 +285,8 @@ namespace Soil_Monitoring_Web_App.Migrations
                     b.Property<float>("K")
                         .HasColumnType("FLOAT");
 
-                    b.Property<int>("MeasurementDateId")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Moisture")
+                        .HasColumnType("DECIMAL(5,2)");
 
                     b.Property<float>("N")
                         .HasColumnType("FLOAT");
@@ -342,9 +303,10 @@ namespace Soil_Monitoring_Web_App.Migrations
                     b.Property<decimal>("Temp")
                         .HasColumnType("DECIMAL(5,2)");
 
-                    b.HasKey("Id");
+                    b.Property<TimeSpan>("Time")
+                        .HasColumnType("time");
 
-                    b.HasIndex("MeasurementDateId");
+                    b.HasKey("Id");
 
                     b.HasIndex("SensorId");
 
@@ -402,43 +364,13 @@ namespace Soil_Monitoring_Web_App.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Soil_Monitoring_Web_App.Models.MeasurementDate", b =>
-                {
-                    b.HasOne("Soil_Monitoring_Web_App.Models.Sensor", "Sensor")
-                        .WithMany()
-                        .HasForeignKey("SensorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Sensor");
-                });
-
-            modelBuilder.Entity("Soil_Monitoring_Web_App.Models.Sensor", b =>
-                {
-                    b.HasOne("Soil_Monitoring_Web_App.Models.Location", "Location")
-                        .WithMany()
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Location");
-                });
-
             modelBuilder.Entity("Soil_Monitoring_Web_App.Models.SoilData", b =>
                 {
-                    b.HasOne("Soil_Monitoring_Web_App.Models.MeasurementDate", "MeasurementDate")
-                        .WithMany()
-                        .HasForeignKey("MeasurementDateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Soil_Monitoring_Web_App.Models.Sensor", "Sensor")
                         .WithMany()
                         .HasForeignKey("SensorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("MeasurementDate");
 
                     b.Navigation("Sensor");
                 });

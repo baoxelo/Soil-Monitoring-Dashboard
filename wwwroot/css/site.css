@@ -1,3 +1,6 @@
+* {
+    user-select: none;
+}
 html {
   font-size: 14px;
 }
@@ -25,7 +28,7 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
-    background: linear-gradient(to right, #fff 40%, #e7f0c4 100%);
+    background: linear-gradient(to right, #fff 50%, #e7f0c4 100%);
 }
 p {
     margin: 0;

@@ -1,4 +1,4 @@
-﻿
+﻿$graycolor: #484848 ;
 .container {
     margin: 0;
     flex: 1;
@@ -8,6 +8,21 @@
     background-repeat: no-repeat;
     background-size: cover;
     background-position-y: bottom;
+}
+
+//<---------------- HEADER ---------------->//
+
+#spinner {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.5s ease, visibility 0s;
+    z-index: 99999;
+}
+
+#spinner.hide {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0s linear 0.5s;
 }
 
 //<---------------- HEADER ---------------->//
@@ -45,7 +60,7 @@
     }
 
     &.active {
-        background-color: #484848;
+        background-color: $graycolor;
 
         span {
             max-width: 200px; // tùy độ dài chữ
@@ -57,5 +72,47 @@
         i, span {
             color: #fff;
         }
+    }
+}
+
+
+
+//<---------------- SOIL IMAGE ---------------->//
+.soil-container {
+    position: relative;
+    display: flex;
+    flex: 1;
+    .soil-image {
+        height: 400px;
+        width: 400px;
+    }
+}
+
+//<---------------- CRUD DATABASE ---------------->//
+.crudDb-container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 35%;
+    left: -20px;
+}
+.updatedb-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+    width: 60px;
+    margin-bottom: 20px;
+    cursor: pointer;
+
+    button {
+        font-size: 20px;
+        height: 100%;
+        width: 100%;
+        border-radius: 50%;
+        z-index: 1;
+    }
+    &:hover {
+        opacity: 0.8;
     }
 }

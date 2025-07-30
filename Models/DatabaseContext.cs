@@ -41,8 +41,6 @@ namespace Soil_Monitoring_Web_App.Models
             _webHostEnvironment = webHostEnvironment;
         }
         public DbSet<Sensor> Sensors { get; set; }
-        public DbSet<Location> Locations { get; set; }
-        public DbSet<MeasurementDate> Measurements { get; set; }
         public DbSet<SoilData> SoilDatas { get; set; }
     }
 }
