@@ -1,4 +1,5 @@
 ﻿$graycolor: #484848 ;
+$greencolor: rgb(207, 233, 99);
 .container {
     margin: 0;
     flex: 1;
@@ -75,13 +76,16 @@
     }
 }
 
-
-
+.header-avatar {
+    height: 32px;
+    width: 32px;
+}
 //<---------------- SOIL IMAGE ---------------->//
 .soil-container {
     position: relative;
     display: flex;
     flex: 1;
+
     .soil-image {
         height: 400px;
         width: 400px;
@@ -115,4 +119,173 @@
     &:hover {
         opacity: 0.8;
     }
+}
+//<---------------- STATISTIC ---------------->//
+.info-card {
+    display: block;
+    background-color: white;
+    color: black;
+    min-height: 150px;
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    padding: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+    &.dark {
+        background-color: $graycolor;
+        color: white;
+    }
+
+    span {
+        font-size: 0.85rem;
+    }
+
+    .icon-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 45px;
+        width: 45px;
+        margin: 5px 0px;
+        border-radius: 50%;
+        background-color: $greencolor;
+    }
+}
+.chart-wrapper {
+    display: block;
+    background-color: white;
+    color: black;
+    width: 100%;
+    min-height: 150px;
+    border-radius: 10px;
+}
+
+#npkChart {
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+#humidittyChart {
+    margin-top: 20px;
+    background: radial-gradient(circle at center, #e9fca3, #9ac20a);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+footer {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.85rem;
+    color: #fff;
+}
+
+
+
+
+
+
+//<---------------- STATISTIC PAGE ---------------->//
+
+.staticPageContainer {
+    margin: 0px 40px;
+}
+
+
+#statisticChart {
+    align-content: center;
+    justify-items: center;
+    height: 300px;
+    background: transparent;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+
+
+$chart-bg: #4daf50; //
+$chart-hover: #4caf50; //
+
+.stat-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 15px;
+    text-align: center;
+    cursor: pointer;
+    background: $chart-bg;
+    color: #e0e0e0;
+    transition: all 0.25s ease;
+    border: 1px solid transparent;
+
+    &:hover {
+        background: #fff;
+        color: $chart-hover;
+        border: 1px solid #ccc;
+    }
+
+    &.active {
+        background: #fff;
+        color: $chart-hover;
+        border: 1px solid #ccc;
+    }
+}
+
+.smallChart {
+    align-content: center;
+    justify-items: center;
+    height: 250px;
+    background: #fff;
+    border-radius: 5px;
+}
+#HumidittyChart {
+    border: 1px solid #4caf50;
+}
+#pHChart {
+    border: 1px solid #e91e63;
+}
+#ECChart {
+    border: 1px solid #ff9800;
+}
+#TempChart {
+    border: 1px solid #2196f3;
+}
+
+
+//<---------------- PRIVACY PAGE ---------------->//
+.privacy-container {
+    display: flex;
+    flex: 1;
+    margin-right: -50px;
+    flex-direction: column;
+    padding-bottom: 150px;
+    overflow-y: auto;
+    max-height: calc(100vh - 150px);
+    // 🎨 Custom scrollbar
+    &::-webkit-scrollbar {
+        width: 8px; // độ rộng scrollbar
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1; // nền track
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #9ac20a, #6b8e23); // xanh lá đậm nhạt
+        border-radius: 10px;
+        transition: background 0.3s ease;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #7fb800, #4d660f); // hover sẫm hơn
+    }
+    // Firefox support
+    scrollbar-width: thin;
+    scrollbar-color: #9ac20a #f1f1f1;
 }

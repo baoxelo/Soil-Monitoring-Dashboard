@@ -1,28 +1,45 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "Thông tin cá nhân";
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
-
-<h3>@ViewData["Title"]</h3>
 <partial name="_StatusMessage" for="StatusMessage" />
 <div class="row">
-    <div class="col-md-6">
-        <form id="profile-form" method="post">
+    <form class="row" id="profile-form" method="post" enctype="multipart/form-data">
+        <div class="col-md-6">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Username" class="form-control" placeholder="Please choose your username." disabled />
-                <label asp-for="Username" class="form-label"></label>
+            <div class="col-md-6">
+                <div class="form-group ps-4 row align-content-center">
+                    <label for="edit-avatar-@Html.DisplayFor(avatar => Model.UserName)" class="control-label btn my-3 p-0 btn-chang-image avatar-wrapper ">
+                        <img class="w-100 image-wrapper object-fit-cover" src="@Model.Avatar" alt="avatar" />
+                    </label>
+                    <input onchange="mainModule.setImageToInput(this)" id="edit-avatar-@Html.DisplayFor(avatar => Model.UserName)" type="file" asp-for="Input.ImageFile" class="form-control" style="display: none;" />
+                </div>
             </div>
             <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."/>
+                <input asp-for="UserName" class="form-control" placeholder="Vui lòng chọn tên người dùng của bạn." disabled />
+                <label asp-for="UserName" class="form-label"></label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.FullName" class="form-control" placeholder="Tên người dùng" />
+                <label asp-for="Input.FullName" class="form-label"></label>
+                <span asp-validation-for="Input.FullName" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Nhập số điện thoại" />
                 <label asp-for="Input.PhoneNumber" class="form-label"></label>
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
-        </form>
-    </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Address" class="form-control" placeholder="Nhập số điện thoại" />
+                <label asp-for="Input.Address" class="form-label"></label>
+                <span asp-validation-for="Input.Address" class="text-danger"></span>
+            </div>
+            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Lưu</button>
+        </div>
+        
+    </form>
 </div>
 
 @section Scripts {

@@ -50,13 +50,13 @@ namespace Soil_Monitoring_Web_App.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9c90edde-960e-4cdc-8bec-a2341f8295a4",
+                            Id = "067fc46a-ede6-4b72-bcb4-931e093adb12",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "6617ca4b-ee91-4b7d-abc3-6ba672668639",
+                            Id = "862a3423-fa1e-4c48-b2b1-9a72677d0ce1",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -254,7 +254,7 @@ namespace Soil_Monitoring_Web_App.Migrations
                     b.Property<string>("Latitude")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Longtitude")
+                    b.Property<string>("Longitude")
                         .HasColumnType("longtext");
 
                     b.Property<int>("Name")
@@ -277,7 +277,7 @@ namespace Soil_Monitoring_Web_App.Migrations
                         .HasColumnType("date");
 
                     b.Property<decimal>("EC")
-                        .HasColumnType("DECIMAL(6,3)");
+                        .HasColumnType("DECIMAL(10,4)");
 
                     b.Property<decimal>("Humidity")
                         .HasColumnType("DECIMAL(5,2)");
@@ -295,7 +295,7 @@ namespace Soil_Monitoring_Web_App.Migrations
                         .HasColumnType("FLOAT");
 
                     b.Property<decimal>("PH")
-                        .HasColumnType("decimal(10,4)");
+                        .HasColumnType("Decimal(5,2)");
 
                     b.Property<int>("SensorId")
                         .HasColumnType("int");

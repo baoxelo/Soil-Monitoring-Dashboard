@@ -1,27 +1,41 @@
 ﻿@page
 @model ExternalLoginModel
 @{
-    ViewData["Title"] = "Register";
 }
 
-<h1>@ViewData["Title"]</h1>
-<h2 id="external-login-title">Associate your @Model.ProviderDisplayName account.</h2>
+<h2 id="external-login-title">Register new account with @Model.ProviderDisplayName account.</h2>
 <hr />
 
 <p id="external-login-description" class="text-info">
-    You've successfully authenticated with <strong>@Model.ProviderDisplayName</strong>.
-    Please enter an email address for this site below and click the Register button to finish
-    logging in.
+    Login from <strong>@Model.ProviderDisplayName</strong> successfully.
+    Please enter information.
 </p>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="row">
         <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="email" placeholder="Please enter your email."/>
-                <label asp-for="Input.Email" class="form-label"></label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            @* If the provider returns an email, store it in a hidden field so the user doesn’t need to enter it. *@
+            @if (!string.IsNullOrEmpty(Model.Input?.Email))
+            {
+                <input type="hidden" asp-for="Input.Email" />
+                <div class="form-group mb-3">
+                    <label>Email</label>
+                    <input class="form-control" value="@Model.Input.Email" readonly />
+                </div>
+            }
+            else
+            {
+                <div class="form-group mb-3">
+                    <label asp-for="Input.Email" class="form-label"></label>
+                    <input asp-for="Input.Email" class="form-control" placeholder="Enter your email" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-floating my-3">
+                <input asp-for="Input.PhoneNumber" class="form-control" autocomplete="email" placeholder="Please enter your phone number." />
+                <label asp-for="Input.PhoneNumber" class="form-label"></label>
+                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
             <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>

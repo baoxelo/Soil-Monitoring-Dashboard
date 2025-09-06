@@ -4,41 +4,49 @@
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
 
+@{
+    // Get ID and user
+    var userId = UserManager.GetUserId(User);
+    var user = await UserManager.FindByIdAsync(userId);
+
+    bool isAdmin = false;
+    if (user != null)
+    {
+        var roles = await UserManager.GetRolesAsync(user);
+        isAdmin = roles.Any(q => q == "Administrator");
+    }
+}
+
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <div class=" ms-3 dropdown">
-        <button title="Tài khoản" class=" h-100 w-100  dropdown-toggle p-0 overflow-hidden" type="button" id="dropdownAvatar" data-bs-toggle="dropdown" aria-expanded="false">
+    <div class="dropdown me-3 d-flex">
+        <button title="Account" class="d-flex align-items-center dropdown-toggle p-0 bg-transparent border-0" type="button" id="dropdownAvatar" data-bs-toggle="dropdown" aria-expanded="false">
             @{
-                // Get ID and user
-                var userId = UserManager.GetUserId(User);
-                var user = await UserManager.FindByIdAsync(userId);
+                
 
                 if (user != null && !string.IsNullOrEmpty(user.Avatar))
                 {
-                    <img class="h-100 w-100 object-fit-cover" src="@user.Avatar" alt="User Avatar" />
+                    <img class="header-avatar rounded-circle me-2" src="@user.Avatar" alt="User Avatar" />
+                    <span class="me-1">@user.FullName</span>
                 }
                 else
                 {
                     <span class="fa fa-user text-body"></span>
                 }
-                bool isAdmin = false;
-                if(user != null)
-                {
-                    var roles = await UserManager.GetRolesAsync(user);
-                    isAdmin = roles.Any(q => q == "Administrator");
-                }
+
+
                 
             }
         </button>
-        <ul class="dropdown-menu dropdown-menu-start dropdown-menu-lg-end" aria-labelledby="dropdownAvatar">
-            <li class="dropdown-item active-text-light"><a asp-area="Identity" asp-page="/Account/Manage/Index" class="text-dark fw-medium active-text-light">Profile</a></li>
+        <ul class="dropdown-menu dropdown-menu-start dropdown-menu-lg-end p-0 mt-2" aria-labelledby="dropdownAvatar">
+            <li class="dropdown-item active-text-light py-1"><a asp-area="Identity" asp-page="/Account/Manage/Index" class="text-dark fw-medium active-text-light d-block w-100">Profile</a></li>
             @if(isAdmin) {
-                <li class="dropdown-item active-text-light"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="text-dark fw-medium active-text-light">Admin</a></li>
+                <li class="dropdown-item active-text-light py-1"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="text-dark fw-medium active-text-light">Admin</a></li>
             }
-            <li class="dropdown-item active-text-light">
+            <li class="dropdown-item active-text-light py-1">
                 <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                    <input id="logout" type="submit" class="text-danger border-0 w-100 bg-transparent text-start p-0 text-danger fw-medium" title="Log out" value="Log out" />
+                    <input id="logout" type="submit" class="text-success border-0 w-100 bg-transparent text-start p-0 fw-medium" title="Log out" value="Log out" />
                 </form>
             </li>
 

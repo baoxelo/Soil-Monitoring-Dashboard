@@ -1,6 +1,192 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
+﻿@model Soil_Monitoring_Web_App.Models.StatisticPageModel
+@{
+    var location = ViewData["Location"] as dynamic;
 }
-<h1>@ViewData["Title"]</h1>
+<div class="staticPageContainer">
+    <div class="row">
+        <div class="col-6 ">
+            <div id="statisticChart"></div>
+        </div>
+        <div id="map" class="col-3"></div>
+        <div class="col-3 px-3">
+            <div class="row mb-3">
+                <div class="col-6 px-2">
+                    <button class="stat-btn" data-key="N"><i class="fa-solid fa-seedling me-1"></i> N</button>
+                </div>
+                <div class="col-6 px-2">
+                    <button class="stat-btn" data-key="P"><i class="fa-solid fa-flask me-1"></i> P</button>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6 px-2">
+                    <button class="stat-btn" data-key="K"><i class="fa-solid fa-water me-1"></i> K</button>
+                </div>
+                <div class="col-6 px-2">
+                    <button class="stat-btn" data-key="Humiditty"><i class="fa-solid fa-droplet me-1"></i> Humiditty</button>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6 px-2">
+                    <button class="stat-btn" data-key="Temp"><i class="fa-solid fa-temperature-high me-1"></i> Temp</button>
+                </div>
+                <div class="col-6 px-2">
+                    <button class="stat-btn" data-key="pH"><i class="fa-solid fa-vial me-1"></i> pH</button>
+                </div>
 
-<p>Use this page to detail your site's privacy policy.</p>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6 px-2">
+                    <button class="stat-btn" data-key="EC"><i class="fa-solid fa-bolt me-1"></i> EC</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row pt-4">
+        <div class="col-3 px-2">
+            <div id="HumidittyChart" class="smallChart"></div>
+        </div>
+        <div class="col-3 px-2">
+            <div id="pHChart" class="smallChart"></div>
+        </div>
+        <div class="col-3 px-2">
+            <div id="TempChart" class="smallChart"></div>
+        </div>
+        <div class="col-3 px-2">
+            <div id="ECChart" class="smallChart"></div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts 
+{ 
+    <script>
+        // VARIABLE
+        var allData = {
+            N: @Html.Raw(Json.Serialize(Model.N)),
+            P: @Html.Raw(Json.Serialize(Model.P)),
+            K: @Html.Raw(Json.Serialize(Model.K)),
+            Humiditty: @Html.Raw(Json.Serialize(Model.Humiditty)),
+            Temp: @Html.Raw(Json.Serialize(Model.Temp)),
+            pH: @Html.Raw(Json.Serialize(Model.pH)),
+            EC: @Html.Raw(Json.Serialize(Model.EC))
+        };
+        var charts = {};
+        const chartColors = {
+            green: "#4caf50",
+            blue: "#2196f3",
+            yellow: "#ff9800",
+            pink: "#e91e63"
+        };
+        var startupFunction;
+
+        function startupFunction () {
+
+            renderStatisticChart();
+            renderStatisticChart(key = "Humiditty", chartId = "#HumidittyChart", chartColor = chartColors.green);
+            renderStatisticChart(key = "pH", chartId = "#pHChart", chartColor = chartColors.pink);
+            renderStatisticChart(key = "EC", chartId = "#ECChart", chartColor = chartColors.yellow);
+            renderStatisticChart(key = "Temp", chartId = "#TempChart", chartColor = chartColors.blue);
+        }
+
+        startupFunction();
+
+
+        // --------------------- FUNCTION ------------------------//
+        function renderStatisticChart(key = "N", chartId = "#statisticChart", chartColor = "#4caf50") {
+            var maxValue = Math.max(...allData[key].map(item => item.data));
+            var minValue = Math.min(...allData[key].map(item => item.data));
+
+            var options = {
+                chart: {
+                    type: 'area',
+                    height: "95%",
+                    width: "95%",
+                    toolbar: { show: false },
+                    background: 'transparent',
+                    foreColor: '#000000'
+                },
+                title: {
+                    text: `${key} Levels Over Time`,
+                    align: "center",
+                    style: { fontSize: "16px", fontWeight: 600, color: "#000000" }
+                },
+                colors: [chartColor],
+                stroke: { curve: 'smooth', width: 2 },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shade: 'dark',
+                        type: 'vertical',
+                        shadeIntensity: 0.6,
+                        gradientToColors: ['#2e7d32'],
+                        opacityFrom: 0.45,
+                        opacityTo: 0.05,
+                        stops: [0, 100]
+                    }
+                },
+                series: [{
+                    name: `${key} value`,
+                    data: allData[key].map(item => ({
+                        x: new Date(item.date).getTime(),
+                        y: item.data
+                    }))
+                }],
+                xaxis: {
+                    type: "datetime",
+                    labels: {
+                        style: { colors: "#000000" },
+                        datetimeFormatter: {
+                            year: "yyyy",
+                            month: "MMM",
+                            day: "dd MMM",
+                            hour: "HH:mm"
+                        }
+                    }
+                },
+                yaxis: {
+                    min: minValue - (minValue*0.2),
+                    max: maxValue + (maxValue*0.15),
+                    labels: { style: { colors: '#000000' } }
+                },
+                dataLabels: { enabled: false }
+            };
+
+            // nếu chưa có chart thì tạo mới
+            if (!charts[chartId]) {
+                charts[chartId] = new ApexCharts(document.querySelector(chartId), options);
+                charts[chartId].render();
+            } else {
+                charts[chartId].updateOptions(options);
+            }
+        }
+
+
+        // --------------------- EVENT ------------------------//
+        // LISTEN EVENT CLICK OF STAT-BUTTON
+
+        $(".stat-btn").on("click", function () {
+            let key = $(this).data("key");
+            renderStatisticChart(key, "#statisticChart");  // update chart chính
+
+            $(".stat-btn").removeClass("active");
+            $(this).addClass("active");
+        });
+
+        var map = L.map('map').setView([@location.Latitude, @location.Longitude], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+
+        L.marker([@location.Latitude, @location.Longitude])
+            .addTo(map)
+            .bindPopup("<b>Sensor</b><br/>ĐHQG Thủ Đức")
+            .openPopup();
+
+
+
+    </script>
+
+}
+

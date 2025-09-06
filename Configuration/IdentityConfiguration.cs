@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace ShoesShop.Configuration
+namespace Soil_Monitoring_Web_App.Configuration
 {
     public static class IdentityConfiguration
     {

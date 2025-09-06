@@ -1,0 +1,30 @@
+﻿@{
+    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout != null)
+    {
+        Layout = parentLayout.ToString();
+    }
+    else
+    {
+        Layout = "/Views/Shared/_Layout.cshtml";
+    }
+
+}
+
+<div class=" rounded-3 overflow-hidden position-relative">
+    <div class="row">
+        <div class="col-lg-1"></div>
+        <div class="d-none d-lg-block col-5 p-0" style="height: 500px">
+            <img class="h-100 " style=""  alt="slideimage" src="~/img/login-illustration.png"/>
+        </div>
+        <div class="col-lg-1"></div>
+        <div class="col-12 col-lg-3 p-5">
+            <section>
+                @RenderBody()
+            </section>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}

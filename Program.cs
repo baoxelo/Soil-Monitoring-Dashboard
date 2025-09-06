@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Soil_Monitoring_Web_App.Models;
 using Microsoft.EntityFrameworkCore;
-using ShoesShop.Configuration;
+using Soil_Monitoring_Web_App.Configuration;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Soil_Monitoring_Web_App.Services;
 using Soil_Monitoring_Web_App.IExtensionServices;
 using Soil_Monitoring_Web_App.ExtensionServices;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Soil_Monitoring_Web_App
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +26,7 @@ namespace Soil_Monitoring_Web_App
             builder.Services.AddAuthorization();
             builder.Services.AddTransient<IEmailSender, SendMailService>();
             builder.Services.AddScoped<ICsvToSqlService, CsvToSqlService>();
-
+            builder.Services.AddTransient<IFirebaseStorage, FirebaseStorage>();
             builder.Services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Identity/Account/Login";
@@ -35,6 +36,17 @@ namespace Soil_Monitoring_Web_App
             builder.Services.Configure<SecurityStampValidatorOptions>(options =>
             {
                 options.ValidationInterval = TimeSpan.FromSeconds(30);
+            });
+            builder.Services.AddAuthentication().AddGoogle(googleOptions => {
+                // Đọc thông tin Authentication:Google từ appsettings.json
+                IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
+
+                // Thiết lập ClientID và ClientSecret để truy cập API google
+                googleOptions.ClientId = googleAuthNSection["ClientId"];
+                googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
+                // Cấu hình Url callback lại từ Google (không thiết lập thì mặc định là /signin-google)
+                googleOptions.CallbackPath = "/Login-Google";
+                googleOptions.ClaimActions.MapJsonKey("image", "picture");
             });
 
 
@@ -47,6 +59,13 @@ namespace Soil_Monitoring_Web_App
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var importDb = scope.ServiceProvider.GetRequiredService<ICsvToSqlService>();
+                await importDb.ImportCsvToDatabase();
+            }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();

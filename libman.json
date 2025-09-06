@@ -9,6 +9,18 @@
     {
       "library": "wow@1.1.2",
       "destination": "wwwroot/lib/wow"
+    },
+    {
+      "library": "Chart.js@4.4.1",
+      "destination": "wwwroot/lib/Chart.js/"
+    },
+    {
+      "library": "apexcharts@5.3.2",
+      "destination": "wwwroot/lib/apexcharts/"
+    },
+    {
+      "library": "leaflet@1.9.4",
+      "destination": "wwwroot/lib/leaflet/"
     }
   ]
 }

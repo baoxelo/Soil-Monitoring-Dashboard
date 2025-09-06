@@ -1,9 +1,12 @@
-﻿using Google.Apis.Auth.OAuth2;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
 using Soil_Monitoring_Web_App.IExtensionServices;
 using Soil_Monitoring_Web_App.Models;
+using System.Globalization;
 using System.Text;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -67,56 +70,58 @@ namespace Soil_Monitoring_Web_App.ExtensionServices
 
             if (!_context.Sensors.Any(q => q.Name == 1))
             {
+                _logger.LogInformation("Create sensor");
                 var sensor = new Sensor()
                 {
                     Name = 1,
 
                 };
                 await _context.Sensors.AddAsync(sensor);
+                await _context.SaveChangesAsync();
             }
-            var lines = await File.ReadAllLinesAsync(outputFile);
+
+            _logger.LogInformation("Insert to database");
             var soilDataList = new List<SoilData>();
+            using var reader = new StreamReader(outputFile);
+            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
-            foreach (var line in lines.Skip(1)) // skip header
+            csv.Read();
+            csv.ReadHeader();
+
+
+            while (csv.Read())
             {
-                List<string> parts = line.Split(',').ToList();
+                var record = csv.Parser.Record; // string[] of 1 line
 
-                if (!parts.Contains("0"))
+                if (!record.Contains("0") && !_context.SoilDatas.Any(q => q.Time == TimeSpan.Parse(csv.GetField<string>(1)))   )
                 {
                     var sensor = _context.Sensors.FirstOrDefault(q => q.Name == 1);
                     var data = new SoilData
                     {
-                        N = int.Parse(parts[3]),
-                        P = int.Parse(parts[4]),
-                        K = int.Parse(parts[5]),
-                        Humidity = float.Parse(parts[6]),
-                        PH = int.Parse(parts[7]),
-                        EC = int.Parse(parts[8]),
-                        Temp = float.Parse(parts[9]),
-                        Date = DateTime.Parse(parts[1]),
-                        Time = TimeSpan.Parse(parts[2]),
+                        N = csv.GetField<int>("N"),
+                        P = csv.GetField<int>("P"),
+                        K = csv.GetField<int>("K"),
+                        Humidity = csv.GetField<float>("Humiditty"),
+                        PH = csv.GetField<float>("Ph"),
+                        EC = csv.GetField<float>("EC")/1000,
+                        Temp = csv.GetField<float>("Temp"),
+                        Date = DateTime.Parse(csv.GetField<string>("Date")),  
+                        Time = TimeSpan.Parse(csv.GetField<string>("Time")),  
                         SensorId = sensor?.Id ?? 0,
                     };
+
                     soilDataList.Add(data);
 
-                    if (sensor.Latitude != parts[10] || sensor.Longtitude != parts[11])
+                    if (sensor.Latitude != csv.GetField<string>("Lattitude") || sensor.Longitude != csv.GetField<string>("Longtitude"))
                     {
-                        sensor.Latitude = parts[10];
-                        sensor.Longtitude = parts[11];
+                        sensor.Latitude = csv.GetField<string>("Lattitude");
+                        sensor.Longitude = csv.GetField<string>("Longtitude");
                         await _context.SaveChangesAsync();
                     }
-
-
                 }
-
-
-
             }
-            
-            _context.AddRange(soilDataList);
+            await _context.SoilDatas.AddRangeAsync(soilDataList);
             await _context.SaveChangesAsync();
-
-
         }
     }
 }

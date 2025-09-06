@@ -16,8 +16,16 @@
     <script src="https://kit.fontawesome.com/23b49860cf.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- Site CSS -->
+    <!-- Googlemap Stylesheet -->
+    <link rel="stylesheet" href="~/lib/leaflet/leaflet.css" />
+
+    <!-- Chart Stylesheet -->
+    <link rel="stylesheet" href="~/lib/apexcharts/apexcharts.min.css" />
+    <link rel="stylesheet" href="~/lib/apexcharts/apexcharts-legend.min.css" />
+
+    <!-- Site CSS --> 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
     <!-- Main CSS -->
     <link rel="stylesheet" href="~/css/main.css" asp-append-version="true" />
 </head>
@@ -43,10 +51,10 @@
                             <a class="nav-link @((ViewData["Navbar"] as string == "Statistic") ? "active" : "")" asp-area="" asp-controller="Statistic" asp-action="Index"><i class="fa-solid fa-chart-simple"></i> <span>Statistics</span></a>
                         </li>
                         <li class="nav-item ms-3 me-3 ">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy"><i class="fa-solid fa-file"></i><span>Task</span></a>
+                            <a class="nav-link @((ViewData["Navbar"] as string == "Privacy") ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Privacy"><i class="fa-solid fa-file"></i><span>Privacy</span></a>
                         </li>
                         <li class="nav-item ms-3  me-3 ">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy"><i class="fa-solid fa-bell"></i><span>Notification</span></a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index"><i class="fa-solid fa-bell"></i><span>Notification</span></a>
                         </li>
                     </ul>
                 </div>
@@ -62,11 +70,16 @@
             @RenderBody()
         </main>
     </div>
+    <footer class="position-absolute">
+        <p>&copy; 2025 Bảo Vũ | Summer Internship at International University - HCMIU. All rights reserved.</p>
+    </footer>
 
-    
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/wow//wow.min.js"></script>
+    <script src="~/lib/apexcharts/apexcharts.min.js"></script>
+    <script src="~/lib/wow/wow.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/leaflet/leaflet.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/main.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

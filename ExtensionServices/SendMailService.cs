@@ -35,22 +35,27 @@ namespace Soil_Monitoring_Web_App.Services
             logger = _logger;
             logger.LogInformation("Create SendMailService");
         }
-
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            var message = new MimeMessage();
-            message.Sender = new MailboxAddress(mailSettings.DisplayName, mailSettings.Mail);
-            message.From.Add(new MailboxAddress(mailSettings.DisplayName, mailSettings.Mail));
-            message.To.Add(MailboxAddress.Parse(email));
-            message.Subject = subject;
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                logger.LogError("SendEmailAsync called with null or empty email address.");
+                throw new ArgumentException("Email address cannot be null or empty", nameof(email));
+            }
 
-            var builder = new BodyBuilder();
-            builder.HtmlBody = htmlMessage;
+            var message = new MimeMessage();
+            message.Sender = new MailboxAddress(mailSettings.DisplayName ?? "", mailSettings.Mail ?? "");
+            message.From.Add(new MailboxAddress(mailSettings.DisplayName ?? "", mailSettings.Mail ?? ""));
+            message.To.Add(MailboxAddress.Parse(email));
+            message.Subject = subject ?? "";
+
+            var builder = new BodyBuilder
+            {
+                HtmlBody = htmlMessage ?? ""
+            };
             message.Body = builder.ToMessageBody();
 
-            // dùng SmtpClient của MailKit
             using var smtp = new MailKit.Net.Smtp.SmtpClient();
-
             try
             {
                 smtp.Connect(mailSettings.Host, mailSettings.Port, SecureSocketOptions.StartTls);
@@ -59,18 +64,17 @@ namespace Soil_Monitoring_Web_App.Services
             }
             catch (Exception ex)
             {
-                // Gửi mail thất bại, nội dung email sẽ lưu vào thư mục mailssave
+                // Save email if sending fails
                 System.IO.Directory.CreateDirectory("mailssave");
                 var emailsavefile = string.Format(@"mailssave/{0}.eml", Guid.NewGuid());
                 await message.WriteToAsync(emailsavefile);
 
-                logger.LogInformation("Sending error, save at - " + emailsavefile);
-                logger.LogError(ex.Message);
+                logger.LogInformation("Sending error, saved at - " + emailsavefile);
+                logger.LogError(ex, "Error while sending email.");
             }
 
             smtp.Disconnect(true);
-
-            logger.LogInformation("send mail to: " + email);
+            logger.LogInformation("Sent mail to: " + email);
         }
     }
 }

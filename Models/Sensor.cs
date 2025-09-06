@@ -10,7 +10,7 @@ namespace Soil_Monitoring_Web_App.Models
 
         public int Name { get; set; }
 
-        public string? Longtitude { get; set; }
+        public string? Longitude { get; set; }
 
         public string? Latitude { get; set; }
 
